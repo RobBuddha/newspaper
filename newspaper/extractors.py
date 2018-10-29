@@ -216,6 +216,8 @@ class ContentExtractor(object):
              'content': 'content'},
             {'attribute': 'pubdate', 'value': 'pubdate',
              'content': 'datetime'},
+            {'attribute': 'name', 'value': 'dcterms.created',
+             'content': 'content'}, # Fox News
         ]
         for known_meta_tag in PUBLISH_DATE_TAGS:
             meta_tags = self.parser.getElementsByTag(
@@ -229,6 +231,24 @@ class ContentExtractor(object):
                 datetime_obj = parse_date_str(date_str)
                 if datetime_obj:
                     return datetime_obj
+
+        # NBC News
+        NBC_TAG = {
+            'tag': 'time',
+            'attribute': 'datetime'
+        }
+        date_tags = self.parser.getElementsByTag(
+            doc,
+            tag=NBC_TAG['tag']
+        )
+        if (date_tags):
+            date_str = self.parser.getAttribute(
+                date_tags[0],
+                NBC_TAG['attribute']
+            )
+            datetime_obj = parse_date_str(date_str)
+            if datetime_obj:
+                return datetime_obj
 
         return None
 
